@@ -5,6 +5,7 @@
     "browser_action": {
         "default_popup": "popup.html"
     },
-    "permissions": ["http://bet.hkjc.com/*"],
+    "content_security_policy": "script-src 'self'; object-src 'self'",
+    "permissions": ["http://bet.hkjc.com/*", "http://hk.racing.nextmedia.com/*", "tabs"],
     "icons": { "128": "horse-icon.png"}
 }
