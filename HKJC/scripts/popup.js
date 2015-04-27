@@ -30,7 +30,7 @@ var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&v
         var dom = "";
         var result = "";
         
-        var numOfRace = 0;
+        $scope.numOfRace = 0;
                 
         $http.get(tipsUrl).success(function(data){
             dom = $(data);
@@ -38,7 +38,7 @@ var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&v
         
         $http.get(mainUrl).success(function(data){
             var temp = $(data).find('td:contains("賽事:")').parent().find("td:eq(1)").text()
-            numOfRace = parseInt(temp.substr(0, temp.length - 2));
+            $scope.numOfRace = parseInt(temp.substr(0, temp.length - 2));
         });
         
         $scope.isEmptyRace = function(){
@@ -104,9 +104,9 @@ var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&v
         }
         
         
-        $interval(function(){
-          $scope.updateOdds($scope.Number);
-        }, 5000);  
+        //$interval(function(){
+        //  $scope.updateOdds($scope.Number);
+        //}, 5000);  
     }]);
 })();
 

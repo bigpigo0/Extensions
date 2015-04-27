@@ -13,21 +13,30 @@
         <script src="scripts/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
         <script src="scripts/jquery.xml2json.js"></script>
         <script src="scripts/popup.js"></script>
+        <style>
+            body, tr{
+
+                font-size: 10pt;
+            }
+            table {
+                table-layout: fixed;
+            }
+        </style>
     </head>
     <body ng-controller="RaceController as raceCtrl" ng-init="updateOdds(1)">
         <div style="width: 900px">
             場次:
             <ul class="nav nav-tabs">
-                <li role="presentation" ng-model="Number" ng-repeat="n in [] | range:10" ng-class="{ active: Number === n + 1}"><a ng-click="updateOdds($index + 1)">{{ n + 1 }}</a></li>
+                <li role="presentation" ng-model="Number" ng-repeat="n in [] | range:numOfRace" ng-class="{ active: Number === n + 1}"><a ng-click="updateOdds($index + 1)">{{ n + 1 }}</a></li>
             </ul>
             <div ng-hide="isEmptyRace()">
-                <p>{{ race.RACE_NAME_C }} {{ race.CLASSES_C }} {{ race.DISTANCE + "米" }} {{ race.POST_DATE }} {{ race.POST_TIME }}</p>
+                <p><span class="label label-default">{{ race.RACE_NAME_C }}</span> <span class="label label-primary">{{ race.CLASSES_C }}</span> <span class="label label-info">{{ race.DISTANCE + "米" }}</span> <span class="label label-warning">{{ race.POST_DATE }}</span> <span class="label label-success">{{ race.POST_TIME }}</span></p>
             </div>
-            <table class="table table-condensed" style="width: 900px">
+            <table class="table table-condensed" style="width: auto">
                 <tr>
                     <th>馬號</th>
-                    <th>馬名</th>
-                    <td>檔位</td>
+                    <th class="col-md-1">馬名</th>
+                    <th>檔位</th>
                     <th>騎師</th>
                     <th>獨贏</th>
                     <th>賠率下降</th>
@@ -37,18 +46,18 @@
                     <th>各報貼士</th>
                     <th>名次</th>
                 </tr>
-                <tr ng-repeat="odd in wins" title="{{ '現時評分: ' + race.RUNNER[odd.NUM - 1].RATING }}">
-                    <td>{{ odd.NUM }}</td>
-                    <td><a id="{{ race.RUNNER[odd.NUM - 1].HORSE_NUM }}" ng-href="{{ 'http://www.hkjc.com/chinese/racing/Horse.asp?HorseNo=' + race.RUNNER[odd.NUM - 1].HORSE_NUM  }}">{{ race.RUNNER[odd.NUM - 1].HORSE_NAME_C }}</a></td>
-                    <td>{{ race.RUNNER[odd.NUM - 1].BAR_DRAW }}</td>
-                    <td>{{ race.RUNNER[odd.NUM - 1].JOCKEY_NAME_C }}</td>
-                    <td ng-style="getOddStyle(odd.HF)">{{ odd.WILLPAY / 1000 }}</td>
-                    <td ng-style="getOddDropStyle(odd.ODDSDROP)">{{ odd.ODDSDROP }} %</td>
-                    <td ng-style="getOddStyle(plas[odd.NUM - 1].HF)">{{ plas[odd.NUM - 1].MIN_WILLPAY / 1000}}</td>
-                    <td ng-style="getOddDropStyle(plas[odd.NUM - 1].ODDSDROP)">{{ plas[odd.NUM - 1].ODDSDROP }} %</td>
-                    <td>{{ race.RUNNER[odd.NUM - 1].LAST_SIX_RUNS }}</td>
-                    <td>{{ raceCtrl.getTips(race.RUNNER[odd.NUM - 1].HORSE_NAME_C) }}</td>
-                    <td>{{ raceCtrl.result[race.RUNNER[odd.NUM - 1].HORSE_NAME_C] }}</td>
+                <tr ng-repeat="runner in race.RUNNER" title="{{ '現時評分: ' + runner.RATING }}">
+                    <td>{{ runner.NUM }}</td>
+                    <td><a id="{{ runner.HORSE_NUM }}" ng-href="{{ 'http://racing.hkjc.com/racing/info/horse/smartform/chinese/' + runner.HORSE_NUM  }}">{{ runner.HORSE_NAME_C }}</a></td>
+                    <td>{{ runner.BAR_DRAW }}</td>
+                    <td>{{ runner.JOCKEY_NAME_C }}</td>
+                    <td ng-style="getOddStyle(wins[runner.NUM - 1].HF)">{{ wins[runner.NUM].WILLPAY / 1000 }}</td>
+                    <td ng-style="getOddDropStyle(wins[runner.NUM - 1].ODDSDROP)">{{ wins[runner.NUM].ODDSDROP }} %</td>
+                    <td ng-style="getOddStyle(plas[runner.NUM - 1].HF)">{{ plas[runner.NUM - 1].MIN_WILLPAY / 1000}}</td>
+                    <td ng-style="getOddDropStyle(plas[runner.NUM - 1].ODDSDROP)">{{ plas[runner.NUM - 1].ODDSDROP }} %</td>
+                    <td>{{ runner.LAST_SIX_RUNS }}</td>
+                    <td>{{ raceCtrl.getTips(runner.HORSE_NAME_C) }}</td>
+                    <td>{{ raceCtrl.result[runner.HORSE_NAME_C] }}</td>
                 </tr>
             </table>
         </div>
