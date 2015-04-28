@@ -16,6 +16,16 @@ var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&v
         };
     });
     
+    app.filter("toTime", function(){
+        return function(input){
+            if(typeof input != "undefined" && input.length == 4){
+                 return input.substr(0,2) + ":" + input.substr(2,2);
+            }else{
+                return input;
+            }
+        };
+    });
+    
     app.controller('RaceController', ["$http", "$scope", "$interval", function($http, $scope, $interval){
         var race = this;
         race.odds = [];
