@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html ng-app="race">
+    <head>
+        <title>HKJC</title>
+        <script src="scripts/jquery-2.1.3.min.js"></script>
+        <script src="scripts/angular.min.js"></script>
+        <link rel="stylesheet" href="angular-csp.css" />
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="scripts/bootstrap-3.3.4-dist/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="scripts/bootstrap-3.3.4-dist/css/bootstrap-theme.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="scripts/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+        <script src="scripts/jquery.xml2json.js"></script>
+        <script src="scripts/popup.js"></script>
+        <style>
+            body, tr{
+
+                font-size: 10pt;
+            }
+            table {
+                table-layout: fixed;
+            }
+        </style>
+    </head>
+    <body ng-controller="RaceController as raceCtrl" ng-init="updateOdds(1)">
+        <div style="width: 900px">
+            場次:
+            <ul class="nav nav-tabs">
+                <li role="presentation" ng-model="Number" ng-repeat="n in [] | range:numOfRace" ng-class="{ active: Number === n + 1}"><a ng-click="updateOdds($index + 1)">{{ n + 1 }}</a></li>
+            </ul>
+            <div ng-hide="isEmptyRace()" class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="label label-default">{{ race.RACE_NAME_C }}</span> <span class="label label-primary">{{ race.CLASSES_C }}</span> <span class="label label-info">{{ race.DISTANCE + "米" }}</span> <span class="label label-warning">{{ race.POST_DATE }}</span> <span class="label label-success">{{ race.POST_TIME | toTime}}</span>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed" style="width: auto">
+                        <tr>
+                            <th>馬號</th>
+                            <th class="col-md-1">馬名</th>
+                            <th>檔位</th>
+                            <th>騎師</th>
+                            <th>獨贏</th>
+                            <th>賠率下降</th>
+                            <th>位置</th>
+                            <th>賠率下降</th>
+                            <th>6次近績</th>
+                            <th>各報貼士</th>
+                            <th>名次</th>
+                        </tr>
+                        <tr ng-repeat="runner in race.RUNNER" title="{{ '現時評分: ' + runner.RATING }}">
+                            <td>{{ runner.NUM }}</td>
+                            <td><a id="{{ runner.HORSE_NUM }}" ng-href="{{ 'http://racing.hkjc.com/racing/info/horse/smartform/chinese/' + runner.HORSE_NUM  }}">{{ runner.HORSE_NAME_C }}</a></td>
+                            <td>{{ runner.BAR_DRAW }}</td>
+                            <td>{{ runner.JOCKEY_NAME_C }}</td>
+                            <td ng-style="getOddStyle(wins[runner.NUM - 1].HF)">{{ wins[runner.NUM].WILLPAY / 1000 }}</td>
+                            <td ng-style="getOddDropStyle(wins[runner.NUM - 1].ODDSDROP)">{{ wins[runner.NUM].ODDSDROP }} %</td>
+                            <td ng-style="getOddStyle(plas[runner.NUM - 1].HF)">{{ plas[runner.NUM - 1].MIN_WILLPAY / 1000}}</td>
+                            <td ng-style="getOddDropStyle(plas[runner.NUM - 1].ODDSDROP)">{{ plas[runner.NUM - 1].ODDSDROP }} %</td>
+                            <td>{{ runner.LAST_SIX_RUNS }}</td>
+                            <td>{{ raceCtrl.getTips(runner.HORSE_NAME_C) }}</td>
+                            <td>{{ raceCtrl.result[runner.HORSE_NAME_C] }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="panel-footer">更新時間: {{ updateDate }} {{ updateTime }}</div>
+            </div>
+        </div>
+    </body>
+</html>
