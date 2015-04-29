@@ -26,7 +26,6 @@
     </head>
     <body ng-controller="RaceController as raceCtrl" ng-init="updateOdds(1)">
         <div style="width: 900px">
-            場次:
             <ul class="nav nav-tabs">
                 <li role="presentation" ng-model="Number" ng-repeat="n in [] | range:numOfRace" ng-class="{ active: Number === n + 1}"><a ng-click="updateOdds($index + 1)">{{ n + 1 }}</a></li>
             </ul>

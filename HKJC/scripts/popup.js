@@ -114,9 +114,9 @@ var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&v
         }
         
         
-        //$interval(function(){
-        //  $scope.updateOdds($scope.Number);
-        //}, 5000);  
+        $interval(function(){
+          $scope.updateOdds($scope.Number);
+        }, 5000);  
     }]);
 })();
 
