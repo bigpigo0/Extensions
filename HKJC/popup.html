@@ -12,6 +12,8 @@
         <link rel="stylesheet" href="scripts/bootstrap-3.3.4-dist/css/bootstrap-theme.min.css">
         <!-- Latest compiled and minified JavaScript -->
         <script src="scripts/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+        <script src="scripts/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
         <script src="scripts/jquery.xml2json.js"></script>
         <script src="scripts/popup.js"></script>
         <style>
@@ -25,6 +27,7 @@
         </style>
     </head>
     <body ng-controller="RaceController as raceCtrl" ng-init="updateOdds(1)">
+        <input type="hidden" id="speedMapImg" value="{{speedMap}}"/>
         <div style="width: 900px">
             <ul class="nav nav-tabs">
                 <li role="presentation" ng-model="Number" ng-repeat="n in [] | range:numOfRace" ng-class="{ active: Number === n + 1}"><a ng-click="updateOdds($index + 1)">{{ n + 1 }}</a></li>
@@ -44,7 +47,7 @@
                             <th>賠率下降</th>
                             <th>位置</th>
                             <th>賠率下降</th>
-                            <th>6次近績</th>
+                            <th>速勢榜</th>
                             <th>各報貼士</th>
                             <th>名次</th>
                         </tr>
@@ -57,7 +60,7 @@
                             <td ng-style="getOddDropStyle(wins[runner.NUM - 1].ODDSDROP)">{{ wins[runner.NUM - 1].ODDSDROP }} %</td>
                             <td ng-style="getOddStyle(plas[runner.NUM - 1].HF)">{{ plas[runner.NUM - 1].MIN_WILLPAY / 1000}}</td>
                             <td ng-style="getOddDropStyle(plas[runner.NUM - 1].ODDSDROP)">{{ plas[runner.NUM - 1].ODDSDROP }} %</td>
-                            <td><small>{{ runner.LAST_SIX_RUNS }}</small></td>
+                            <td>{{ speedIndex[runner.HORSE_NAME_C] }}</td>
                             <td><small>{{ raceCtrl.getTips(runner.HORSE_NAME_C) }}</small></td>
                             <td>{{ raceCtrl.result[runner.HORSE_NAME_C] }}</td>
                         </tr>

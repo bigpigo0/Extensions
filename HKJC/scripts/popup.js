@@ -3,6 +3,8 @@ var homeUrl = "http://bet.hkjc.com/racing/getXML.aspx";
 var tipsUrl = "http://hk.racing.nextmedia.com/other9tips.php";
 var meetingsUrl = "http://bet.hkjc.com/racing/getXML.aspx?type=MEETINGS&callback=getMeetingDates";
 var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&venue=ST&raceno=";
+var speedUrl = "http://www.hkjc.com/chinese/formguide/speedmap.asp?FrmRaceNum=";
+var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
 
 (function() {
     var app = angular.module('race', []);
@@ -34,8 +36,10 @@ var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&v
         $scope.wins = [];
         $scope.plas = [];
         $scope.runner = [];
+        $scope.speedIndex = [];
         $scope.updateDate = "";
         $scope.updateTime = "";
+        $scope.speedMap = "";
     
         var dom = "";
         var result = "";
@@ -104,6 +108,14 @@ var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&v
                 });
             });
             
+            $http.get(speedUrl + (($scope.Number < 10) ? "0" : "") + $scope.Number).success(function(data){
+                $scope.speedMap = speedMapUrl + $(data).find("img[alt*='Speed Map of meeting']").attr('src');
+                $(data).find(".normalfont").each(function(index, value){
+                    $scope.speedIndex[$(value).find('td:eq(1)').text().trim()] =  $(value).find('td:eq(4)').text().trim();
+                });
+
+            });
+            
             $http.get(resultUrl + $scope.Number).success(function(data){
                 result = $(data);
                 race.result[$(data).find("td:contains('名次'):eq(3) table tr:eq(1) td:eq(2)").text()] = 1;
@@ -138,5 +150,20 @@ $( document ).ready(function() {
             chrome.tabs.create({ url: $(this).attr("href") });
         }
     });
+    
+//    $( document ).tooltip({
+//      items: "[speed-map]",
+//      position: {
+//        my: "left top",
+//        at: "right+5 top-5"
+//      },
+//      content: function() {
+//        var element = $( this );
+//        if ( element.is( "[speed-map]" ) ) {
+//          //var text = element.text();
+//          return "<img src='" + $("#speedMapImg").val() + "'>";
+//        }
+//      }
+//    });
 });
 
