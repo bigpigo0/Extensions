@@ -6,13 +6,14 @@ var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&v
 var speedUrl = "http://www.hkjc.com/chinese/formguide/speedmap.asp?FrmRaceNum=";
 var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
 
-(function() {
+(function () {
     var app = angular.module('race', []);
     
     app.filter('range', function() {
-        return function(input, total) {
+        return function (input, total) {
             total = parseInt(total);
-            for (var i=0; i<total; i++)
+            var i;
+            for (i = 0; i < total; i++)
                 input.push(i);
             return input;
         };
@@ -37,9 +38,11 @@ var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
         $scope.plas = [];
         $scope.runner = [];
         $scope.speedIndex = [];
+        $scope.fitnessRating = [];
         $scope.updateDate = "";
         $scope.updateTime = "";
         $scope.speedMap = "";
+        race.track = "";
     
         var dom = "";
         var result = "";
@@ -84,6 +87,7 @@ var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
                 $.each(root, function(key, value){
                     if(value.DATE != undefined){
                         $scope.race = value.RACE;
+                        $scope.race["track"] = value.MEETING_TRACK;
                     }
                 });
                 //$scope.race = root.STARTERS[1].RACE;
@@ -112,6 +116,7 @@ var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
                 $scope.speedMap = speedMapUrl + $(data).find("img[alt*='Speed Map of meeting']").attr('src');
                 $(data).find(".normalfont").each(function(index, value){
                     $scope.speedIndex[$(value).find('td:eq(1)').text().trim()] =  $(value).find('td:eq(4)').text().trim();
+                    $scope.fitnessRating[$(value).find('td:eq(1)').text().trim()] = $(value).find('td:eq(5)').find("img").length
                 });
 
             });
