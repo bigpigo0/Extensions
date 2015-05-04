@@ -23,19 +23,23 @@
             table {
                 table-layout: fixed;
             }
+            .ui-tooltip {
+                max-width: 400px;
+            }
         </style>
     </head>
-    <body ng-controller="RaceController as raceCtrl" ng-init="updateOdds(1)" style="width: 700px">
-        <input type="hidden" id="speedMapImg" value="{{speedMap}}"/>
+    <body ng-controller="RaceController as raceCtrl" ng-init="updateOdds(1)" style="width: 900px">
+        <input type="hidden" id="speedMapImg" value="{{raceCtrl.speedMap}}"/>
         <div style="width: auto">
             <ul class="nav nav-tabs">
-                <li role="presentation" ng-model="Number" ng-repeat="n in [] | range:numOfRace" ng-class="{ active: Number === n + 1}"><a ng-click="updateOdds($index + 1)">{{ n + 1 }}</a></li>
+                <li role="presentation" ng-model="Number" ng-repeat="n in [] | range:numOfRace" ng-class="{ active: Number === n + 1}"><a ng-click="updateOdds($index + 1)">{{  n + 1 }}</a></li>
             </ul>
             <div ng-hide="isEmptyRace()" class="panel panel-default">
                 <div class="panel-heading">
-                    <h5><span class="label label-default">{{ race.RACE_NAME_C }}</span> <span class="label label-primary">{{ race.CLASSES_C + " " + (race.track === "TURF" ? "草地" : "泥地")}}</span> <span class="label label-info">{{ race.DISTANCE + "米"}}</span> <span class="label label-warning">{{ race.POST_DATE }}</span> <span class="label label-success">{{ race.POST_TIME | toTime}}</span></h5>
+                    <span class="label label-default">{{ race.RACE_NAME_C }}</span> <span class="label label-primary">{{ race.CLASSES_C + " " + (race.track === "TURF" ? "草地" : "泥地")}}</span> <span class="label label-info">{{ race.DISTANCE + "米"}}</span> <span class="label label-warning">{{ race.POST_DATE }}</span> <span class="label label-success">{{ race.POST_TIME | toTime}}</span> 更新時間: {{ updateDate }} {{ updateTime }}
                 </div>
                 <div class="panel-body">
+                    <img ng-src="{{raceCtrl.speedMap}}" width="600px"/>
                     <table class="table table-condensed" style="width: auto">
                         <tr>
                             <th>馬號</th>
@@ -49,6 +53,7 @@
                             <th>速勢榜</th>
                             <th>狀態評級</th>
                             <th>各報貼士</th>
+                            <th>練馬師貼士</th>
                             <th>名次</th>
                         </tr>
                         <tr ng-repeat="runner in race.RUNNER" title="{{ '現時評分: ' + runner.RATING }}">
@@ -63,11 +68,11 @@
                             <td>{{ speedIndex[runner.HORSE_NAME_C] }}</td>
                             <td>{{ fitnessRating[runner.HORSE_NAME_C] }}</td>
                             <td><small>{{ raceCtrl.getTips(runner.HORSE_NAME_C) }}</small></td>
+                            <td><small>{{ raceCtrl.getOnccTip(runner.HORSE_NAME_C) >= 0 ? raceCtrl.getOnccTip(runner.HORSE_NAME_C)/2 + 1: "" }}</small></td>
                             <td>{{ raceCtrl.result[runner.HORSE_NAME_C] }}</td>
                         </tr>
                     </table>
                 </div>
-                <div class="panel-footer">更新時間: {{ updateDate }} {{ updateTime }}</div>
             </div>
         </div>
     </body>

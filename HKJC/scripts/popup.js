@@ -5,6 +5,7 @@ var meetingsUrl = "http://bet.hkjc.com/racing/getXML.aspx?type=MEETINGS&callback
 var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&venue=ST&raceno=";
 var speedUrl = "http://www.hkjc.com/chinese/formguide/speedmap.asp?FrmRaceNum=";
 var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
+var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
 
 (function () {
     var app = angular.module('race', []);
@@ -45,12 +46,17 @@ var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
         race.track = "";
     
         var dom = "";
+        var onccdom = "";
         var result = "";
         
         $scope.numOfRace = 0;
                 
         $http.get(tipsUrl).success(function(data){
             dom = $(data);
+        });
+        
+        $http.get(onccTipUrl).success(function(data){
+            onccdom = $(data);
         });
         
         $http.get(mainUrl).success(function(data){
@@ -68,6 +74,7 @@ var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
                 "color" : oddDrop >= 50 ? '#FFFFFF' : oddDrop >= 20 ? '#FFFFFF' : '#000000'
             }
         }
+        
         $scope.getOddStyle = function (hf){
             return {
                 "background": hf == 1 ? '#C80000' : 'FFFFFF',
@@ -76,7 +83,16 @@ var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
         }
         
         race.getTips = function(horseName){
-            return dom.find('table.small tr:has(td:contains("' + horseName + '"))').find('td:eq(0)').text();
+            var result = [];
+            var tips = dom.find('table.small tr:has(td:contains("' + horseName + '"))').find('td:eq(0)').text().trim().split('\n\n');
+            $.each(tips, function( index, value ) {
+                result.push(value.substr(0, 1));
+            });
+            return result.join(" ");
+        }
+        
+        race.getOnccTip = function(horseName){
+            return onccdom.find("a:contains('" + horseName + "')").index();
         }
         
         $scope.updateOdds = function(number) {
@@ -113,7 +129,7 @@ var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
             });
             
             $http.get(speedUrl + (($scope.Number < 10) ? "0" : "") + $scope.Number).success(function(data){
-                $scope.speedMap = speedMapUrl + $(data).find("img[alt*='Speed Map of meeting']").attr('src');
+                race.speedMap = speedMapUrl + $(data).find("img[alt*='Speed Map of meeting']").attr('src');
                 $(data).find(".normalfont").each(function(index, value){
                     $scope.speedIndex[$(value).find('td:eq(1)').text().trim()] =  $(value).find('td:eq(4)').text().trim();
                     $scope.fitnessRating[$(value).find('td:eq(1)').text().trim()] = $(value).find('td:eq(5)').find("img").length
@@ -155,20 +171,5 @@ $( document ).ready(function() {
             chrome.tabs.create({ url: $(this).attr("href") });
         }
     });
-    
-//    $( document ).tooltip({
-//      items: "[speed-map]",
-//      position: {
-//        my: "left top",
-//        at: "right+5 top-5"
-//      },
-//      content: function() {
-//        var element = $( this );
-//        if ( element.is( "[speed-map]" ) ) {
-//          //var text = element.text();
-//          return "<img src='" + $("#speedMapImg").val() + "'>";
-//        }
-//      }
-//    });
 });
 
