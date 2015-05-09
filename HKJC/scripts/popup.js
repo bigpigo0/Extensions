@@ -98,6 +98,20 @@ var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
             return $scope.jockyTip[horseName];
         }
         
+        $scope.getPlaFairValue = function(jocky){
+            if($scope.fairValue[jocky] != undefined){
+                return $scope.fairValue[jocky].Item2;
+            }
+            return NaN;
+        }
+        
+        $scope.getWinFairValue = function(jocky){
+            if($scope.fairValue[jocky] != undefined){
+                return $scope.fairValue[jocky].Item1;
+            }
+            return NaN;
+        }
+        
         $scope.isMax = function(number) {
              var values = $.map($scope.speedIndex, function(v) { return v; });
              return {
@@ -149,6 +163,10 @@ var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
             
             $http.get(tipServiceUrl + "Result/" + $scope.Number).success(function(data){
                 race.result = data;
+            });
+            
+            $http.get(tipServiceUrl + "JockyFairValue").success(function(data){
+                $scope.fairValue = data;
             });
             
             //$http.get(jkresultUrl).success(function(data){

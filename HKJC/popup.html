@@ -18,7 +18,7 @@
         <script src="scripts/popup.js"></script>
         <style>
             body, tr{
-                font-size: 14pt;
+                font-size: 13pt;
             }
             table {
                 table-layout: fixed;
@@ -42,20 +42,19 @@
                 <div ng-bind-html="jkResult"></div>
                 <table class="table table-condensed" style="width: auto">
                     <tr>
-                        <th>馬號</th>
+                        <th>#</th>
                         <th>馬名</th>
                         <th>檔位</th>
                         <th>負磅</th>
                         <th>騎師</th>
-                        <th>獨贏</th>
+                        <th>獨贏(值博)</th>
                         <th>下降</th>
-                        <th>位置</th>
+                        <th>位置(值博)</th>
                         <th>下降</th>
                         <th>速勢榜</th>
                         <th>狀態</th>
                         <th>各報貼士</th>
                         <th>練貼士</th>
-<!--                        <th>值博率</th>-->
                         <th>名次</th>
                     </tr>
                     <tr ng-repeat="runner in race.RUNNER" title="{{ '現時評分: ' + runner.RATING }}">
@@ -64,15 +63,14 @@
                         <td>{{ runner.BAR_DRAW }}</td>
                         <td>{{ runner.HANDICAP_WGT }}</td>
                         <td>{{ runner.JOCKEY_NAME_C }}</td>
-                        <td ng-style="getOddStyle(wins[runner.NUM - 1].HF)">{{ wins[runner.NUM - 1].WILLPAY / 1000 }}</td>
+                        <td ng-style="getOddStyle(wins[runner.NUM - 1].HF)">{{ wins[runner.NUM - 1].WILLPAY / 1000 + " (" + getWinFairValue(runner.JOCKEY_NAME_C) + ")"}}</td>
                         <td ng-style="getOddDropStyle(wins[runner.NUM - 1].ODDSDROP)">{{ wins[runner.NUM - 1].ODDSDROP }} %</td>
-                        <td ng-style="getOddStyle(plas[runner.NUM - 1].HF)">{{ plas[runner.NUM - 1].MIN_WILLPAY / 1000}}</td>
+                        <td ng-style="getOddStyle(plas[runner.NUM - 1].HF)">{{ plas[runner.NUM - 1].MIN_WILLPAY / 1000 + " (" + getPlaFairValue(runner.JOCKEY_NAME_C) + ")" }}</td>
                         <td ng-style="getOddDropStyle(plas[runner.NUM - 1].ODDSDROP)">{{ plas[runner.NUM - 1].ODDSDROP }} %</td>
                         <td ng-style="isMax(speedIndex[runner.HORSE_NAME_C])">{{ speedIndex[runner.HORSE_NAME_C] }}</td>
                         <td>{{ fitnessRating[runner.HORSE_NAME_C] }}</td>
                         <td><small>{{ raceCtrl.getTips(runner.HORSE_NAME_C) }}</small></td>
                         <td><small>{{ raceCtrl.getOnccTip(runner.HORSE_NAME_C) }}</small></td>
-<!--                        <td></td>-->
                         <td>{{ raceCtrl.result[runner.HORSE_NAME_C] }}</td>
                     </tr>
                 </table>
