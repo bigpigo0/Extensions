@@ -6,6 +6,7 @@ var resultUrl = "http://bet.hkjc.com/racing/pages/results.aspx?date=26-04-2015&v
 var speedUrl = "http://www.hkjc.com/chinese/formguide/speedmap.asp?FrmRaceNum=";
 var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
 var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
+var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
 
 (function () {
     var app = angular.module('race', []);
@@ -30,7 +31,7 @@ var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
         };
     });
     
-    app.controller('RaceController', ["$http", "$scope", "$interval", function($http, $scope, $interval){
+    app.controller('RaceController', ["$http", "$scope", "$interval", "$sce", function($http, $scope, $interval, $sce){
         var race = this;
         race.odds = [];
         race.result = {};
@@ -40,10 +41,12 @@ var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
         $scope.runner = [];
         $scope.speedIndex = [];
         $scope.fitnessRating = [];
+        $scope.newPaperTips = {};
         $scope.updateDate = "";
         $scope.updateTime = "";
         $scope.speedMap = "";
         race.track = "";
+        race.jkResult = "";
     
         var dom = "";
         var onccdom = "";
@@ -51,6 +54,7 @@ var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
         
         $scope.numOfRace = 0;
                 
+        
         $http.get(tipsUrl).success(function(data){
             dom = $(data);
         });
@@ -59,9 +63,8 @@ var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
             onccdom = $(data);
         });
         
-        $http.get(mainUrl).success(function(data){
-            var temp = $(data).find('td:contains("賽事:")').parent().find("td:eq(1)").text()
-            $scope.numOfRace = parseInt(temp.substr(0, temp.length - 2));
+        $http.get("http://bigpig.synology.me:9002/TipService/Meeting").success(function(data){
+            $scope.numOfRace = parseInt(data);
         });
         
         $scope.isEmptyRace = function(){
@@ -82,23 +85,37 @@ var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
             }
         }
         
+        race.getSpeedIndex = function(runner){
+            return $scope.speedIndex[runner.HORSE_NAME_C] == undefined ? 0 : parseInt($scope.speedIndex[runner.HORSE_NAME_C]);
+        }
+        
         race.getTips = function(horseName){
             var result = [];
-            var tips = dom.find('table.small tr:has(td:contains("' + horseName + '"))').find('td:eq(0)').text().trim().split('\n\n');
-            $.each(tips, function( index, value ) {
-                result.push(value.substr(0, 1));
-            });
+            var keys = [];
+            for (var key in $scope.newPaperTips) {
+                if ($scope.newPaperTips[key].indexOf(horseName) > -1) {
+                    result.push(key.substr(0, 1));
+                }
+            }
             return result.join(" ");
         }
         
         race.getOnccTip = function(horseName){
-            return onccdom.find("a:contains('" + horseName + "')").index();
+            return $scope.jockytip[horseName];
+        }
+        
+        $scope.isMax = function(number) {
+             var values = $.map($scope.speedIndex, function(v) { return v; });
+             return {
+                "background": Math.max.apply(null, values) == number ? '#C80000' : 'FFFFFF',
+                "color" : Math.max.apply(null, values) == number ? '#FFFFFF' : '#000000'
+            }
         }
         
         $scope.updateOdds = function(number) {
             $scope.Number = number;
-            $http.get(homeUrl + "?type=starters&RaceNo=" + number).success(function(data){
-                var root = $.xml2json(data);
+            $http.get("http://bigpig.synology.me:9002/TipService/Race/" + number).success(function(data){
+                var root = data;
                 var today = new Date();
                 $.each(root, function(key, value){
                     if(value.DATE != undefined){
@@ -107,8 +124,8 @@ var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
                     }
                 });
                 //$scope.race = root.STARTERS[1].RACE;
-                $http.get(homeUrl + "?type=win&RaceNo=" + number).success(function(data){
-                    var root = $.xml2json(data);
+                $http.get("http://bigpig.synology.me:9002/TipService/Win/" + number).success(function(data){
+                    var root = data;
                     $scope.updateDate = root.WIN.updateDate;
                     $scope.updateTime = root.WIN.updateTime;
                     $.each(root, function(key, value){
@@ -118,8 +135,8 @@ var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
                     });
                 });
                 
-                $http.get(homeUrl + "?type=pla&RaceNo=" + number).success(function(data){
-                    var root = $.xml2json(data);
+                $http.get("http://bigpig.synology.me:9002/TipService/Place/" + number).success(function(data){
+                    var root = data;
                     $.each(root, function(key, value){
                         //if(value.DATE === formatDate(today)){
                             $scope.plas = value.RACE.OUT;
@@ -128,13 +145,12 @@ var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
                 });
             });
             
-            $http.get(speedUrl + (($scope.Number < 10) ? "0" : "") + $scope.Number).success(function(data){
-                race.speedMap = speedMapUrl + $(data).find("img[alt*='Speed Map of meeting']").attr('src');
-                $(data).find(".normalfont").each(function(index, value){
-                    $scope.speedIndex[$(value).find('td:eq(1)').text().trim()] =  $(value).find('td:eq(4)').text().trim();
-                    $scope.fitnessRating[$(value).find('td:eq(1)').text().trim()] = $(value).find('td:eq(5)').find("img").length
-                });
-
+            $http.get("http://bigpig.synology.me:9002/TipService/Speed/" + $scope.Number).success(function(data){
+                race.speedMap = speedMapUrl + data.ImagePath;
+                $scope.speedIndex =  data.SpeedIndex;
+                $scope.fitnessRating = data.FitnessRating;
+                $scope.newPaperTips = data.NewsPaperTip;
+                $scope.jockytip = data.JockyTip;
             });
             
             $http.get(resultUrl + $scope.Number).success(function(data){
@@ -143,6 +159,10 @@ var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
                 race.result[$(data).find("td:contains('名次'):eq(3) table tr:eq(2) td:eq(2)").text()] = 2;
                 race.result[$(data).find("td:contains('名次'):eq(3) table tr:eq(3) td:eq(2)").text()] = 3;
                 race.result[$(data).find("td:contains('名次'):eq(3) table tr:eq(4) td:eq(2)").text()] = 4;
+            });
+            
+            $http.get(jkresultUrl).success(function(data){
+                $scope.jkResult = $sce.trustAsHtml($(data).find(".bigborder").last().parent().html());
             });
         }
         
