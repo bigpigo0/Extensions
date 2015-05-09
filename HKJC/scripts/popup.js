@@ -55,13 +55,13 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
         $scope.numOfRace = 0;
                 
         
-        $http.get(tipsUrl).success(function(data){
-            dom = $(data);
-        });
+        //$http.get(tipsUrl).success(function(data){
+        //    dom = $(data);
+        //});
         
-        $http.get(onccTipUrl).success(function(data){
-            onccdom = $(data);
-        });
+        //$http.get(onccTipUrl).success(function(data){
+        //    onccdom = $(data);
+        //});
         
         $http.get("http://bigpig.synology.me:9002/TipService/Meeting").success(function(data){
             $scope.numOfRace = parseInt(data);
@@ -101,7 +101,7 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
         }
         
         race.getOnccTip = function(horseName){
-            return $scope.jockytip[horseName];
+            return $scope.jockyTip[horseName];
         }
         
         $scope.isMax = function(number) {
@@ -150,20 +150,16 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
                 $scope.speedIndex =  data.SpeedIndex;
                 $scope.fitnessRating = data.FitnessRating;
                 $scope.newPaperTips = data.NewsPaperTip;
-                $scope.jockytip = data.JockyTip;
+                $scope.jockyTip = data.JockyTip;
             });
             
-            $http.get(resultUrl + $scope.Number).success(function(data){
-                result = $(data);
-                race.result[$(data).find("td:contains('名次'):eq(3) table tr:eq(1) td:eq(2)").text()] = 1;
-                race.result[$(data).find("td:contains('名次'):eq(3) table tr:eq(2) td:eq(2)").text()] = 2;
-                race.result[$(data).find("td:contains('名次'):eq(3) table tr:eq(3) td:eq(2)").text()] = 3;
-                race.result[$(data).find("td:contains('名次'):eq(3) table tr:eq(4) td:eq(2)").text()] = 4;
+            $http.get("http://bigpig.synology.me:9002/TipService/Result/" + $scope.Number).success(function(data){
+                race.result = data;
             });
             
-            $http.get(jkresultUrl).success(function(data){
-                $scope.jkResult = $sce.trustAsHtml($(data).find(".bigborder").last().parent().html());
-            });
+            //$http.get(jkresultUrl).success(function(data){
+            //    $scope.jkResult = $sce.trustAsHtml($(data).find(".bigborder").last().parent().html());
+            //});
         }
         
         

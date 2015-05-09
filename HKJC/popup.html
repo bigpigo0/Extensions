@@ -55,7 +55,7 @@
                         <th>狀態</th>
                         <th>各報貼士</th>
                         <th>練馬師貼士</th>
-                        <th>值博率</th>
+<!--                        <th>值博率</th>-->
                         <th>名次</th>
                     </tr>
                     <tr ng-repeat="runner in race.RUNNER" title="{{ '現時評分: ' + runner.RATING }}">
@@ -72,7 +72,7 @@
                         <td>{{ fitnessRating[runner.HORSE_NAME_C] }}</td>
                         <td><small>{{ raceCtrl.getTips(runner.HORSE_NAME_C) }}</small></td>
                         <td><small>{{ raceCtrl.getOnccTip(runner.HORSE_NAME_C) }}</small></td>
-                        <td></td>
+<!--                        <td></td>-->
                         <td>{{ raceCtrl.result[runner.HORSE_NAME_C] }}</td>
                     </tr>
                 </table>
