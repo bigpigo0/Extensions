@@ -98,17 +98,37 @@ var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
             return $scope.jockyTip[horseName];
         }
         
-        $scope.getPlaFairValue = function(jocky){
-            if($scope.fairValue[jocky] != undefined){
-                return $scope.fairValue[jocky].Item2;
+        $scope.getPlaFairValue = function(number){
+            if($scope.race.RUNNER[number] != undefined){
+                var jockyRate = $scope.race.RUNNER[number].JOCKEY_STAT.split(",");
+                var jp = (parseInt(jockyRate[0]) + parseInt(jockyRate[1]) + parseInt(jockyRate[2]))/parseInt(jockyRate[4]);
+                var hp = parseInt($scope.race.RUNNER[number].PLA_LAST5)/ 5;
+                var value = 1/(jp + hp);
+                return Math.round(value * 100) / 100;
             }
+            
+//            if($scope.fairValue[jocky] != undefined){
+//                return $scope.fairValue[jocky].Item1;
+//            }
             return NaN;
+//            if($scope.fairValue[jocky] != undefined){
+//                return $scope.fairValue[jocky].Item2;
+//            }
+//            return NaN;
         }
         
-        $scope.getWinFairValue = function(jocky){
-            if($scope.fairValue[jocky] != undefined){
-                return $scope.fairValue[jocky].Item1;
+        $scope.getWinFairValue = function(number){
+            if($scope.race.RUNNER[number] != undefined){
+                var jockyRate = $scope.race.RUNNER[number].JOCKEY_STAT.split(",");
+                var jp = parseInt(jockyRate[0])/parseInt(jockyRate[4]);
+                var hp = parseInt($scope.race.RUNNER[number].WIN_LAST5) / 5;
+                var value = 1/(jp + hp);
+                return Math.round(value * 100) / 100;
             }
+            
+//            if($scope.fairValue[jocky] != undefined){
+//                return $scope.fairValue[jocky].Item1;
+//            }
             return NaN;
         }
         
