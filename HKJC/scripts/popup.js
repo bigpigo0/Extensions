@@ -8,6 +8,8 @@ var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
 var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
 var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
 
+var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
+
 (function () {
     var app = angular.module('race', []);
     
@@ -55,15 +57,7 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
         $scope.numOfRace = 0;
                 
         
-        //$http.get(tipsUrl).success(function(data){
-        //    dom = $(data);
-        //});
-        
-        //$http.get(onccTipUrl).success(function(data){
-        //    onccdom = $(data);
-        //});
-        
-        $http.get("http://bigpig.synology.me:9002/TipService/Meeting").success(function(data){
+        $http.get(tipServiceUrl + "Meeting").success(function(data){
             $scope.numOfRace = parseInt(data);
         });
         
@@ -114,7 +108,7 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
         
         $scope.updateOdds = function(number) {
             $scope.Number = number;
-            $http.get("http://bigpig.synology.me:9002/TipService/Race/" + number).success(function(data){
+            $http.get(tipServiceUrl + "Race/" + number).success(function(data){
                 var root = data;
                 var today = new Date();
                 $.each(root, function(key, value){
@@ -124,7 +118,7 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
                     }
                 });
                 //$scope.race = root.STARTERS[1].RACE;
-                $http.get("http://bigpig.synology.me:9002/TipService/Win/" + number).success(function(data){
+                $http.get(tipServiceUrl + "Win/" + number).success(function(data){
                     var root = data;
                     $scope.updateDate = root.WIN.updateDate;
                     $scope.updateTime = root.WIN.updateTime;
@@ -135,7 +129,7 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
                     });
                 });
                 
-                $http.get("http://bigpig.synology.me:9002/TipService/Place/" + number).success(function(data){
+                $http.get(tipServiceUrl + "Place/" + number).success(function(data){
                     var root = data;
                     $.each(root, function(key, value){
                         //if(value.DATE === formatDate(today)){
@@ -145,7 +139,7 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
                 });
             });
             
-            $http.get("http://bigpig.synology.me:9002/TipService/Speed/" + $scope.Number).success(function(data){
+            $http.get(tipServiceUrl + "Speed/" + $scope.Number).success(function(data){
                 race.speedMap = speedMapUrl + data.ImagePath;
                 $scope.speedIndex =  data.SpeedIndex;
                 $scope.fitnessRating = data.FitnessRating;
@@ -153,7 +147,7 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
                 $scope.jockyTip = data.JockyTip;
             });
             
-            $http.get("http://bigpig.synology.me:9002/TipService/Result/" + $scope.Number).success(function(data){
+            $http.get(tipServiceUrl + "Result/" + $scope.Number).success(function(data){
                 race.result = data;
             });
             
