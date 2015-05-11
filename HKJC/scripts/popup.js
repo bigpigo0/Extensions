@@ -79,9 +79,9 @@ var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
             }
         }
         
-        race.getSpeedIndex = function(runner){
-            return $scope.speedIndex[runner.HORSE_NAME_C] == undefined ? 0 : parseInt($scope.speedIndex[runner.HORSE_NAME_C]);
-        }
+//        $scope.getSpeedIndex = function(runner){
+//            return $scope.speedIndex[runner.HORSE_NAME_C] == undefined ? 0 : parseInt($scope.speedIndex[runner.HORSE_NAME_C]);
+//        }
         
         race.getTips = function(horseName){
             var result = [];
@@ -98,37 +98,31 @@ var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
             return $scope.jockyTip[horseName];
         }
         
-        $scope.getPlaFairValue = function(number){
+        $scope.getPlaFairValue = function(number, bar){
             if($scope.race.RUNNER[number] != undefined){
                 var jockyRate = $scope.race.RUNNER[number].JOCKEY_STAT.split(",");
-                var jp = (parseInt(jockyRate[0]) + parseInt(jockyRate[1]) + parseInt(jockyRate[2]))/parseInt(jockyRate[4]);
-                var hp = parseInt($scope.race.RUNNER[number].PLA_LAST5)/ 5;
-                var value = 1/(jp + hp);
+                var jp = (parseInt(jockyRate[0]) +parseInt(jockyRate[1]) + parseInt(jockyRate[2]))/parseInt(jockyRate[4]);
+                //var hp = parseInt($scope.race.RUNNER[number].PLA_LAST5)/ 20;
+                var bp = $scope.barDrawWinChance[$scope.Number + "_" + bar].Item2 / 100
+                var value = 1/((0.6 * jp + 0.4 * bp) * 1);
+                //var value = 1/jp;
                 return Math.round(value * 100) / 100;
             }
             
-//            if($scope.fairValue[jocky] != undefined){
-//                return $scope.fairValue[jocky].Item1;
-//            }
             return NaN;
-//            if($scope.fairValue[jocky] != undefined){
-//                return $scope.fairValue[jocky].Item2;
-//            }
-//            return NaN;
         }
         
-        $scope.getWinFairValue = function(number){
+        $scope.getWinFairValue = function(number, bar){
             if($scope.race.RUNNER[number] != undefined){
                 var jockyRate = $scope.race.RUNNER[number].JOCKEY_STAT.split(",");
                 var jp = parseInt(jockyRate[0])/parseInt(jockyRate[4]);
-                var hp = parseInt($scope.race.RUNNER[number].WIN_LAST5) / 5;
-                var value = 1/(jp + hp);
+                //var hp = parseInt($scope.race.RUNNER[number].WIN_LAST5) / 20;
+                var bp = $scope.barDrawWinChance[$scope.Number + "_" + bar].Item1 / 100
+                var value = 1/((0.6 * jp + 0.4 * bp) * 1);
+                //var value = 1/jp;
                 return Math.round(value * 100) / 100;
             }
             
-//            if($scope.fairValue[jocky] != undefined){
-//                return $scope.fairValue[jocky].Item1;
-//            }
             return NaN;
         }
         
@@ -139,6 +133,25 @@ var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
                 "color" : Math.max.apply(null, values) == number ? '#FFFFFF' : '#000000'
             }
         }
+        
+        $scope.getBarChance = function(bar){
+            return $scope.barDrawWinChance[$scope.Number + "_" + bar].Item2;
+        }
+        
+        $scope.getJockyWin = function(number){
+            var jockyRate = $scope.race.RUNNER[number].JOCKEY_STAT.split(",");
+            var jp = (parseInt(jockyRate[0]) +parseInt(jockyRate[1]) + parseInt(jockyRate[2]))/parseInt(jockyRate[4]);
+            return jp;
+        };
+        
+        $scope.getWinIndex = function(runner, number, bar){
+            var values = $.map($scope.speedIndex, function(v) { return v; });
+            return Math.floor((1 / $scope.getPlaFairValue(number, bar) + $scope.speedIndex[runner]/Math.max.apply(null, values)) * 100)
+        }
+        
+        $http.get(tipServiceUrl + "BarDrawWinChance").success(function(data){
+            $scope.barDrawWinChance = data;
+        });
         
         $scope.updateOdds = function(number) {
             $scope.Number = number;
@@ -185,9 +198,9 @@ var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
                 race.result = data;
             });
             
-            $http.get(tipServiceUrl + "JockyFairValue").success(function(data){
-                $scope.fairValue = data;
-            });
+//            $http.get(tipServiceUrl + "JockyFairValue").success(function(data){
+//                $scope.fairValue = data;
+//            });
             
             //$http.get(jkresultUrl).success(function(data){
             //    $scope.jkResult = $sce.trustAsHtml($(data).find(".bigborder").last().parent().html());
