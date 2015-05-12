@@ -8,7 +8,7 @@ var speedMapUrl = "http://www.hkjc.com/chinese/formguide/";
 var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
 var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
 
-var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
+var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
 
 (function () {
     var app = angular.module('race', []);
@@ -101,10 +101,10 @@ var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
         $scope.getPlaFairValue = function(number, bar){
             if($scope.race.RUNNER[number] != undefined){
                 var jockyRate = $scope.race.RUNNER[number].JOCKEY_STAT.split(",");
-                var jp = (parseInt(jockyRate[0]) +parseInt(jockyRate[1]) + parseInt(jockyRate[2]))/parseInt(jockyRate[4]);
+                var jp = (parseInt(jockyRate[0]) + parseInt(jockyRate[1]) + parseInt(jockyRate[2]))/parseInt(jockyRate[4]);
                 //var hp = parseInt($scope.race.RUNNER[number].PLA_LAST5)/ 20;
                 var bp = $scope.barDrawWinChance[$scope.Number + "_" + bar].Item2 / 100
-                var value = 1/((0.6 * jp + 0.4 * bp) * 1);
+                var value = 1/((0.6 * jp + 0.4 * bp ) * 1);
                 //var value = 1/jp;
                 return Math.round(value * 100) / 100;
             }
@@ -146,7 +146,13 @@ var tipServiceUrl = "http://bigpig.synology.me:9002/TipService/";
         
         $scope.getWinIndex = function(runner, number, bar){
             var values = $.map($scope.speedIndex, function(v) { return v; });
-            return Math.floor((1 / $scope.getPlaFairValue(number, bar) + $scope.speedIndex[runner]/Math.max.apply(null, values)) * 100)
+            var ratio = [0.7, 0.1, 0.1, 0.2]
+            var chanceRate = 1 / $scope.getPlaFairValue(number, bar);
+            var plaRate = (($scope.plas[number].MIN_WILLPAY / 1000) / $scope.getPlaFairValue(number, bar));
+            var fitnessRate = ($scope.fitnessRating[runner] / 3);
+            var speedRate = $scope.speedIndex[runner]/Math.max.apply(null, values);
+            var result = ( chanceRate * ratio[0] + speedRate * ratio[1] + plaRate * ratio[2] + fitnessRate * ratio[3])
+            return Math.floor( result * 100)
         }
         
         $http.get(tipServiceUrl + "BarDrawWinChance").success(function(data){

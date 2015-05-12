@@ -64,7 +64,7 @@
                     <tr ng-repeat="runner in race.RUNNER" title="{{ '現時評分: ' + runner.RATING }}" ng-hide="runner.NUM === '(Null)'">
                         <td>{{ runner.NUM === "(Null)" ? "後備" : runner.NUM }}</td>
                         <td><a id="{{ runner.HORSE_NUM }}" ng-href="{{ 'http://racing.hkjc.com/racing/info/horse/smartform/chinese/' + runner.HORSE_NUM  }}">{{ runner.HORSE_NAME_C }}</a><br><small>{{ runner.JOCKEY_NAME_C }}</small></td>
-                        <td>{{ runner.BAR_DRAW }}</td>
+                        <td>{{ runner.BAR_DRAW }}<br><small>({{getBarChance(runner.BAR_DRAW)}}%)</small></td>
                         <td>{{ runner.HANDICAP_WGT }}</td>
 <!--                        <td>{{ runner.JOCKEY_NAME_C }}</td>-->
                         <td ng-style="getOddStyle(wins[runner.NUM - 1].HF)">{{ wins[runner.NUM - 1].WILLPAY / 1000 + " (" + getWinFairValue(runner.NUM - 1, runner.BAR_DRAW) + ")"}}</td>
