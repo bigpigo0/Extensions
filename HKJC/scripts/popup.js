@@ -180,13 +180,15 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                 //$scope.race = root.STARTERS[1].RACE;
                 $http.get(tipServiceUrl + "Win/" + number).success(function(data){
                     var root = data;
-                    $scope.updateDate = root.WIN.updateDate;
-                    $scope.updateTime = root.WIN.updateTime;
-                    $.each(root, function(key, value){
-                        //if(value.DATE === formatDate(today)){
-                            $scope.wins = value.RACE.OUT;
-                        //}
-                    });
+                    if(root != undefined){
+                        $scope.updateDate = root.WIN.updateDate;
+                        $scope.updateTime = root.WIN.updateTime;
+                        $.each(root, function(key, value){
+                            //if(value.DATE === formatDate(today)){
+                                $scope.wins = value.RACE.OUT;
+                            //}
+                        });
+                    }
                 });
                 
                 $http.get(tipServiceUrl + "Place/" + number).success(function(data){
