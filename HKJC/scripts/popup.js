@@ -56,6 +56,13 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         
         $scope.numOfRace = 0;
                 
+        Array.prototype.max = function() {
+            return Math.max.apply(null, this);
+        };
+
+        Array.prototype.min = function() {
+            return Math.min.apply(null, this);
+        };
         
         $http.get(tipServiceUrl + "Meeting").success(function(data){
             $scope.numOfRace = parseInt(data);
@@ -149,8 +156,8 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             var ratio = [1, 0.1, 0.07, 0.05]
             var chanceRate = 1 / $scope.getPlaFairValue(number, bar);
             var plaRate = (($scope.plas[number].MIN_WILLPAY / 1000) / $scope.getPlaFairValue(number, bar));
-            var fitnessRate = ($scope.fitnessRating[runner] / 3);
-            var speedRate = $scope.speedIndex[runner]/Math.max.apply(null, values);
+            var fitnessRate = (($scope.fitnessRating[runner] - 1)/ 2);
+            var speedRate = ($scope.speedIndex[runner] - values.min())/(values.max() - values.min());
             var result = ( chanceRate * ratio[0] + speedRate * ratio[1] + plaRate * ratio[2] + fitnessRate * ratio[3])
             return Math.floor( result * 100)
         }
