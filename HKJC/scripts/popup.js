@@ -153,7 +153,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         
         $scope.getWinIndex = function(runner, number, bar){
             var values = $.map($scope.speedIndex, function(v) { return v; });
-            var ratio = [1, 0.2, 0.07, 0.05]
+            var ratio = [1.2, 0.2, 0.07, 0.05]
             var chanceRate = 1 / $scope.getPlaFairValue(number, bar);
             var plaRate = (($scope.plas[number].MIN_WILLPAY / 1000) / $scope.getPlaFairValue(number, bar));
             var fitnessRate = (($scope.fitnessRating[runner] - 1)/ 2);
