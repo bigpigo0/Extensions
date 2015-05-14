@@ -164,16 +164,20 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         };
         
         $scope.getWinIndex = function(runner, number, bar){
-            var values = $.map($scope.speedIndex, function(v) { return v; });
-            var ratio = [1.5, 0.5, 0.02, 0.02, 0.0001, 0.05]
-            var chanceRate = (1 / $scope.getPlaFairValue(number, bar)) * ratio[0];
-            var plaRate = ((($scope.plas[number].MIN_WILLPAY / 1000) / $scope.getPlaFairValue(number, bar))) * ratio[1];
-            var plaDrop = ($scope.plas[number].ODDSDROP)/100 * ratio[2];
-            var winDrop = ($scope.wins[number].ODDSDROP)/100 * ratio[3];
-            var fitnessRate = ((($scope.fitnessRating[runner] - 1)/ 2)) * ratio[4];
-            var speedRate = (($scope.speedIndex[runner] - values.min())/(values.max() - values.min())) * ratio[5];
-            var result = ( chanceRate  + speedRate + fitnessRate + plaDrop + winDrop)
-            return Math.floor( result * 100)
+            try{
+                var values = $.map($scope.speedIndex, function(v) { return v; });
+                var ratio = [1.5, 0.5, 0.02, 0.02, 0.0001, 0.05]
+                var chanceRate = (1 / $scope.getPlaFairValue(number, bar)) * ratio[0];
+                var plaRate = ((($scope.plas[number].MIN_WILLPAY / 1000) / $scope.getPlaFairValue(number, bar))) * ratio[1];
+                var plaDrop = ($scope.plas[number].ODDSDROP)/100 * ratio[2];
+                var winDrop = ($scope.wins[number].ODDSDROP)/100 * ratio[3];
+                var fitnessRate = ((($scope.fitnessRating[runner] - 1)/ 2)) * ratio[4];
+                var speedRate = (($scope.speedIndex[runner] - values.min())/(values.max() - values.min())) * ratio[5];
+                var result = ( chanceRate  + speedRate + fitnessRate + plaDrop + winDrop)
+                return Math.floor( result * 100)
+            }catch(err){
+                return NaN;
+            }
         }
         
         $http.get(tipServiceUrl + "BarDrawWinChance").success(function(data){
