@@ -25,6 +25,22 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
       }
     });
     
+    app.factory('tipService', function($http) {
+
+        var getRace = function(number) {
+            return $http.get(tipServiceUrl + "Race/" + number).success(function(data){
+                return data;
+            });
+        }
+        
+        var getBarDrawChance = function(){
+            return $http.get(tipServiceUrl + "BarDrawWinChance").success(function(data){
+                return data;
+            });
+        };
+        return { getRace: getRace, getBarDrawChance: getBarDrawChance };
+    });
+    
     app.filter('range', function() {
         return function (input, total) {
             total = parseInt(total);
@@ -45,7 +61,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         };
     });
     
-    app.controller('RaceController', ["$http", "$scope", "$interval", "$sce", "httpq", function($http, $scope, $interval, $sce, httpq){
+    app.controller('RaceController', ["$http", "$scope", "$interval", "$sce", "httpq", "tipService", function($http, $scope, $interval, $sce, httpq, tipService){
         var race = this;
         race.odds = [];
         race.result = {};
@@ -154,6 +170,9 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         }
         
         $scope.getBarChance = function(bar){
+            if(bar === "(Null)"){
+                return NaN;
+            }
             return $scope.barDrawWinChance[$scope.Number + "_" + bar].Item2;
         }
         
@@ -180,14 +199,14 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             }
         }
         
-        $http.get(tipServiceUrl + "BarDrawWinChance").success(function(data){
-            $scope.barDrawWinChance = data;
-        });
+        $scope.setRaceNumber = function(number){
+            $scope.Number = number;
+        }
         
         $scope.updateOdds = function(number) {
             $scope.Number = number;
-            httpq.get(tipServiceUrl + "Race/" + number).then(function(data){
-                var root = data;
+            tipService.getRace($scope.Number).then(function(data){
+                var root = data.data;
                 var today = new Date();
                 $.each(root, function(key, value){
                     if(value.DATE != undefined){
@@ -195,6 +214,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                         $scope.race["track"] = value.MEETING_TRACK;
                     }
                 });
+
 
                 //$scope.race = root.STARTERS[1].RACE;
                 httpq.get(tipServiceUrl + "Win/" + number).then(function(data){
@@ -243,10 +263,14 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             //});
         }
         
-        
-        $interval(function(){
-          $scope.updateOdds($scope.Number);
-        }, 5000);  
+        tipService.getBarDrawChance().then(function(data){
+            $scope.barDrawWinChance = data.data;
+            $scope.updateOdds($scope.Number);
+            $interval(function(){
+              $scope.updateOdds($scope.Number);
+            }, 5000); 
+        });
+ 
     }]);
 })();
 

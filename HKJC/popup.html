@@ -30,7 +30,7 @@
 */
         </style>
     </head>
-    <body ng-controller="RaceController as raceCtrl" ng-init="updateOdds(1)" style="width: 980px">
+    <body ng-controller="RaceController as raceCtrl" ng-init="setRaceNumber(1)" style="width: 980px">
         <input type="hidden" id="speedMapImg" value="{{raceCtrl.speedMap}}"/>
         <div style="width: auto">
             <ul class="nav nav-tabs">
@@ -83,7 +83,7 @@
                 <div class="panel-footer">
                     <div class="row">
                       <div class="col-md-8">更新時間: {{ updateDate }} {{ updateTime }}</div>
-                      <div class="col-md-4" align="right">version: 1.0</div>
+                      <div class="col-md-4" align="right"><small>version: 1.0</small></div>
                     </div>
                 </div>
             </div>
