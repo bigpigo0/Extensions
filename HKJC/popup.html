@@ -30,7 +30,7 @@
 */
         </style>
     </head>
-    <body ng-controller="RaceController as raceCtrl" ng-init="setRaceNumber(1)" style="width: 980px">
+    <body ng-controller="RaceController as raceCtrl" ng-init="setRaceNumber(1)" style="width: auto">
         <input type="hidden" id="speedMapImg" value="{{raceCtrl.speedMap}}"/>
         <div style="width: auto">
             <ul class="nav nav-tabs">
@@ -40,13 +40,13 @@
                 <div class="panel-heading">
                     <h2><span class="label label-default">{{ race.RACE_NAME_C }}</span> <span class="label label-primary">{{ race.CLASSES_C + " " + (race.track === "TURF" ? "草地" : "泥地")}}</span> <span class="label label-info">{{ race.DISTANCE + "米"}}</span> <span class="label label-warning">{{ race.POST_DATE }}</span> <span class="label label-success">{{ race.POST_TIME | toTime}}</span></h2>
                 </div>
-                <img ng-src="{{raceCtrl.speedMap}}" width="860px"/>
+                <img ng-src="{{raceCtrl.speedMap}}" />
                 <div ng-bind-html="jkResult"></div>
-                <table class="table" style="width: auto">
+                <table class="table">
                     <tr>
                         <th>#</th>
-                        <th>馬名</th>
-                        <th>檔位</th>
+                        <th>馬名<br><small>騎師(上名率)</small></th>
+                        <th>檔位<br><small>(上名率)</small></th>
                         <th>負磅</th>
 <!--                        <th>騎師</th>-->
                         <th>獨贏(值博)</th>
@@ -57,13 +57,13 @@
                         <th>狀態</th>
                         <th>各報貼士</th>
 <!--                        <th>練貼士</th>-->
-                        <th>指數</th>
+<!--                        <th>指數</th>-->
                         <th>名次</th>
 
                     </tr>
                     <tr ng-repeat="runner in race.RUNNER" title="{{ '現時評分: ' + runner.RATING }}" ng-hide="runner.NUM === '(Null)'">
                         <td>{{ runner.NUM === "(Null)" ? "後備" : runner.NUM }}</td>
-                        <td><a id="{{ runner.HORSE_NUM }}" ng-href="{{ 'http://racing.hkjc.com/racing/info/horse/smartform/chinese/' + runner.HORSE_NUM  }}">{{ runner.HORSE_NAME_C }}</a><br><small>{{ runner.JOCKEY_NAME_C }}</small></td>
+                        <td><a id="{{ runner.HORSE_NUM }}" ng-href="{{ 'http://racing.hkjc.com/racing/info/horse/smartform/chinese/' + runner.HORSE_NUM  }}">{{ runner.HORSE_NAME_C }}</a><br><small>{{ runner.JOCKEY_NAME_C }}</small><small>({{ runner.JOCKEY_PLA_STAT }}%)</small></td>
                         <td>{{ runner.BAR_DRAW }}<br><small>({{getBarChance(runner.BAR_DRAW)}}%)</small></td>
                         <td>{{ runner.HANDICAP_WGT }}</td>
 <!--                        <td>{{ runner.JOCKEY_NAME_C }}</td>-->
@@ -75,7 +75,7 @@
                         <td>{{ fitnessRating[runner.HORSE_NAME_C] }}</td>
                         <td><small>{{ raceCtrl.getTips(runner.HORSE_NAME_C) }}</small><br><small>{{ raceCtrl.getOnccTip(runner.HORSE_NAME_C) }}</small></td>
 <!--                        <td></td>-->
-                        <td>{{ getWinIndex(runner.HORSE_NAME_C, runner.NUM - 1, runner.BAR_DRAW)}}</td>
+<!--                        <td>{{ getWinIndex(runner.HORSE_NAME_C, runner.NUM - 1, runner.BAR_DRAW)}}</td>-->
                         <td>{{ raceCtrl.result[runner.HORSE_NAME_C] }}</td>
 
                     </tr>

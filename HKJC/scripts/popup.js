@@ -135,11 +135,11 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         
         $scope.getPlaFairValue = function(number, bar){
             if($scope.race.RUNNER[number] != undefined){
-                var jockyRate = $scope.race.RUNNER[number].JOCKEY_STAT.split(",");
-                var jp = (parseInt(jockyRate[0]) + parseInt(jockyRate[1]) + parseInt(jockyRate[2]))/parseInt(jockyRate[4]);
+                var jp = ($scope.race.RUNNER[number].JOCKEY_PLA_STAT) / 100
+                //var jp = (parseInt(jockyRate[0]) + parseInt(jockyRate[1]) + parseInt(jockyRate[2]))/parseInt(jockyRate[4]);
                 //var hp = parseInt($scope.race.RUNNER[number].PLA_LAST5)/ 20;
                 var bp = $scope.barDrawWinChance[$scope.Number + "_" + bar].Item2 / 100
-                var value = 1/((0.6 * jp + 0.6 * bp ) * 1);
+                var value = 1/(jp + bp - jp * bp );
                 //var value = 1/jp;
                 return Math.round(value * 100) / 100;
             }
@@ -149,12 +149,10 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         
         $scope.getWinFairValue = function(number, bar){
             if($scope.race.RUNNER[number] != undefined){
-                var jockyRate = $scope.race.RUNNER[number].JOCKEY_STAT.split(",");
-                var jp = parseInt(jockyRate[0])/parseInt(jockyRate[4]);
+                var jp = $scope.race.RUNNER[number].JOCKEY_WIN_STAT / 100;
                 //var hp = parseInt($scope.race.RUNNER[number].WIN_LAST5) / 20;
                 var bp = $scope.barDrawWinChance[$scope.Number + "_" + bar].Item1 / 100
-                var value = 1/((0.6 * jp + 0.6 * bp) * 1);
-                //var value = 1/jp;
+                var value = 1/(jp + bp - jp * bp );
                 return Math.round(value * 100) / 100;
             }
             
@@ -201,10 +199,6 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         
         $scope.setRaceNumber = function(number){
             $scope.Number = number;
-        }
-        
-        $scope.updateOdds = function(number) {
-            $scope.Number = number;
             tipService.getRace($scope.Number).then(function(data){
                 var root = data.data;
                 var today = new Date();
@@ -214,8 +208,11 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                         $scope.race["track"] = value.MEETING_TRACK;
                     }
                 });
-
-
+            });
+        }
+        
+        $scope.updateOdds = function(number) {
+            $scope.Number = number;
                 //$scope.race = root.STARTERS[1].RACE;
                 httpq.get(tipServiceUrl + "Win/" + number).then(function(data){
                     var root = data;
@@ -240,7 +237,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                 });
                 
 
-            });
+
             
             $http.get(tipServiceUrl + "Speed/" + $scope.Number).success(function(data){
                 race.speedMap = speedMapUrl + data.ImagePath;
