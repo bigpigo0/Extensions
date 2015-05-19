@@ -147,6 +147,22 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             return NaN;
         }
         
+        $scope.getArrowIcon = function(actual, fair){
+            if(actual >= fair){
+                return "glyphicon glyphicon-plus";
+            }else{
+                return "glyphicon glyphicon-minus";
+            }
+        }
+        
+        $scope.getArrowColor = function(actual, fair){
+            if(actual >= fair){
+                return "color: green; font-size: 10pt";
+            }else{
+                return "color: red; font-size: 10pt";
+            }
+        }
+        
         $scope.getWinFairValue = function(number, bar){
             if($scope.race.RUNNER[number] != undefined){
                 var jp = $scope.race.RUNNER[number].JOCKEY_WIN_STAT / 100;
@@ -259,6 +275,8 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             //    $scope.jkResult = $sce.trustAsHtml($(data).find(".bigborder").last().parent().html());
             //});
         }
+        
+        
         
         tipService.getBarDrawChance().then(function(data){
             $scope.barDrawWinChance = data.data;
