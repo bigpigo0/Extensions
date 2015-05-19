@@ -224,7 +224,9 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                         $scope.race["track"] = value.MEETING_TRACK;
                     }
                 });
+                scope.$apply();
             });
+            $scope.updateOdds(number);
         }
         
         $scope.updateOdds = function(number) {

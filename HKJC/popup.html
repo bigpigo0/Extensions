@@ -34,7 +34,7 @@
         <input type="hidden" id="speedMapImg" value="{{raceCtrl.speedMap}}"/>
         <div style="width: auto">
             <ul class="nav nav-tabs">
-                <li role="presentation" ng-model="Number" ng-repeat="n in [] | range:numOfRace" ng-class="{ active: Number === n + 1}"><a ng-click="updateOdds($index + 1)"><h2>&nbsp;&nbsp;{{n + 1}}&nbsp;&nbsp;</h2></a></li>
+                <li role="presentation" ng-model="Number" ng-repeat="n in [] | range:numOfRace" ng-class="{ active: Number === n + 1}"><a ng-click="setRaceNumber($index + 1)"><h2>&nbsp;&nbsp;{{n + 1}}&nbsp;&nbsp;</h2></a></li>
             </ul>
             <div ng-hide="isEmptyRace()" class="panel panel-default">
                 <div class="panel-heading">
