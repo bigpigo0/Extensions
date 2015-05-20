@@ -102,8 +102,8 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         
         $scope.getOddDropStyle = function (oddDrop){
             return {
-                "background" : oddDrop >= 50 ? '#993300' : oddDrop >= 20 ? '#2AA216' : '#FFFFFF',
-                "color" : oddDrop >= 50 ? '#FFFFFF' : oddDrop >= 20 ? '#FFFFFF' : '#000000'
+                "background" : oddDrop >= 50 ? '#993300' : oddDrop >= 20 ? '#2AA216' : oddDrop >= 5 ? '#00CCFF' : '#FFFFFF',
+                "color" : oddDrop >= 50 ? '#FFFFFF' : oddDrop >= 20 ? '#FFFFFF' : oddDrop >= 5 ? '#FFFFFF' : '#000000'
             }
         }
         
@@ -136,11 +136,8 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         $scope.getPlaFairValue = function(number, bar){
             if($scope.race.RUNNER[number] != undefined){
                 var jp = ($scope.race.RUNNER[number].JOCKEY_PLA_STAT) / 100
-                //var jp = (parseInt(jockyRate[0]) + parseInt(jockyRate[1]) + parseInt(jockyRate[2]))/parseInt(jockyRate[4]);
-                //var hp = parseInt($scope.race.RUNNER[number].PLA_LAST5)/ 20;
                 var bp = $scope.barDrawWinChance[$scope.Number + "_" + bar].Item2 / 100
                 var value = 1/(jp + bp - jp * bp );
-                //var value = 1/jp;
                 return Math.round(value * 100) / 100;
             }
             
