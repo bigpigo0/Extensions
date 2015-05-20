@@ -160,6 +160,26 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             }
         }
         
+        $scope.getFitnessIcon = function(rating){
+            if(rating == 3){
+                return "glyphicon glyphicon-arrow-up";     
+            }else if(rating == 2){
+                return "glyphicon glyphicon-minus";
+            }else if(rating == 1){
+                return "glyphicon glyphicon-arrow-down"; 
+            }
+        }
+        
+        $scope.getFitnessIconColor = function(rating){
+            if(rating == 3){
+                return "color: green; font-size: 10pt";    
+            }else if(rating == 2){
+                return "color: black; font-size: 10pt";
+            }else if(rating == 1){
+                return "color: red; font-size: 10pt";
+            }
+        }
+        
         $scope.getWinFairValue = function(number, bar){
             if($scope.race.RUNNER[number] != undefined){
                 var jp = $scope.race.RUNNER[number].JOCKEY_WIN_STAT / 100;
@@ -179,8 +199,13 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                 "color" : Math.max.apply(null, values) == number ? '#FFFFFF' : '#000000'
             }
         }
-        
-        $scope.getBarChance = function(bar){
+        $scope.getBarWinChance = function(bar){
+            if(bar === "(Null)"){
+                return NaN;
+            }
+            return $scope.barDrawWinChance[$scope.Number + "_" + bar].Item1;
+        }
+        $scope.getBarPlaChance = function(bar){
             if(bar === "(Null)"){
                 return NaN;
             }
