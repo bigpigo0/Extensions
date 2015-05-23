@@ -71,7 +71,7 @@
                         <td ng-style="getOddDropStyle(wins[runner.NUM - 1].ODDSDROP)">{{ wins[runner.NUM - 1].ODDSDROP }}%</td>
                         <td ng-style="getOddStyle(plas[runner.NUM - 1].HF)">{{ plas[runner.NUM - 1].MIN_WILLPAY / 1000 }}<br>({{getPlaFairValue(runner.NUM - 1, runner.BAR_DRAW)}}) <span class="{{ getArrowIcon(plas[runner.NUM - 1].MIN_WILLPAY / 1000, getPlaFairValue(runner.NUM - 1, runner.BAR_DRAW))}}" style="{{ getArrowColor(plas[runner.NUM - 1].MIN_WILLPAY / 1000, getPlaFairValue(runner.NUM - 1, runner.BAR_DRAW))}}"></span></td>
                         <td ng-style="getOddDropStyle(plas[runner.NUM - 1].ODDSDROP)">{{ plas[runner.NUM - 1].ODDSDROP }}%</td>
-                        <td ng-style="isMax(speedIndex[runner.HORSE_NAME_C])">{{ speedIndex[runner.HORSE_NAME_C] }}</td>
+                        <td ng-style="isMax(speedIndex[runner.HORSE_NAME_C])">{{ speedIndex[runner.HORSE_NAME_C] }} ({{ speedIndex[runner.HORSE_NAME_C] - maxSpeedIndex}})</td>
                         <td><span class="{{ getFitnessIcon(fitnessRating[runner.HORSE_NAME_C]) }}" style="{{ getFitnessIconColor(fitnessRating[runner.HORSE_NAME_C]) }}"></span></td>
                         <td><small>{{ raceCtrl.getTips(runner.HORSE_NAME_C) }}</small><br><small>{{ raceCtrl.getOnccTip(runner.HORSE_NAME_C) }}</small></td>
 <!--                        <td></td>-->

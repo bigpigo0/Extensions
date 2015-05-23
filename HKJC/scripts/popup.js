@@ -114,10 +114,6 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             }
         }
         
-//        $scope.getSpeedIndex = function(runner){
-//            return $scope.speedIndex[runner.HORSE_NAME_C] == undefined ? 0 : parseInt($scope.speedIndex[runner.HORSE_NAME_C]);
-//        }
-        
         race.getTips = function(horseName){
             var result = [];
             var keys = [];
@@ -193,10 +189,9 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         }
         
         $scope.isMax = function(number) {
-             var values = $.map($scope.speedIndex, function(v) { return v; });
              return {
-                "background": Math.max.apply(null, values) == number ? '#C80000' : 'FFFFFF',
-                "color" : Math.max.apply(null, values) == number ? '#FFFFFF' : '#000000'
+                "background": $scope.maxSpeedIndex == number ? '#C80000' : 'FFFFFF',
+                "color" : $scope.maxSpeedIndex == number ? '#FFFFFF' : '#000000'
             }
         }
         $scope.getBarWinChance = function(bar){
@@ -285,6 +280,11 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                 $scope.fitnessRating = data.FitnessRating;
                 $scope.newPaperTips = data.NewsPaperTip;
                 $scope.jockyTip = data.JockyTip;
+                var values = [];
+                for (var key in $scope.speedIndex){
+                    values.push($scope.speedIndex[key]);
+                }
+                $scope.maxSpeedIndex = Math.max.apply(null, values);
             });
             
             $http.get(tipServiceUrl + "Result/" + $scope.Number).success(function(data){
@@ -299,9 +299,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             //    $scope.jkResult = $sce.trustAsHtml($(data).find(".bigborder").last().parent().html());
             //});
         }
-        
-        
-        
+         
         tipService.getBarDrawChance().then(function(data){
             $scope.barDrawWinChance = data.data;
             $scope.updateOdds($scope.Number);
