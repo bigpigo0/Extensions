@@ -77,6 +77,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         $scope.speedMap = "";
         race.track = "";
         race.jkResult = "";
+        $scope.poolTot = {};
     
         var dom = "";
         var onccdom = "";
@@ -249,30 +250,32 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         $scope.updateOdds = function(number) {
             $scope.Number = number;
                 //$scope.race = root.STARTERS[1].RACE;
-                httpq.get(tipServiceUrl + "Win/" + number).then(function(data){
-                    var root = data;
-                    if(root != undefined){
-                        $scope.updateDate = root.WIN.updateDate;
-                        $scope.updateTime = root.WIN.updateTime;
-                        $.each(root, function(key, value){
-                            //if(value.DATE === formatDate(today)){
-                                $scope.wins = value.RACE.OUT;
-                            //}
-                        });
-                    }
-                });
-                
-                httpq.get(tipServiceUrl + "Place/" + number).then(function(data){
-                    var root = data;
-                    $.each(root, function(key, value){
-                        //if(value.DATE === formatDate(today)){
-                            $scope.plas = value.RACE.OUT;
-                        //}
-                    });
-                });
-                
-
-
+//                httpq.get(tipServiceUrl + "Win/" + number).then(function(data){
+//                    var root = data;
+//                    if(root != undefined){
+//                        $scope.updateDate = root.WIN.updateDate;
+//                        $scope.updateTime = root.WIN.updateTime;
+//                        $.each(root, function(key, value){
+//                            //if(value.DATE === formatDate(today)){
+//                                $scope.wins = value.RACE.OUT;
+//                            //}
+//                        });
+//                    }
+//                });
+//                
+//                httpq.get(tipServiceUrl + "Place/" + number).then(function(data){
+//                    var root = data;
+//                    $.each(root, function(key, value){
+//                        //if(value.DATE === formatDate(today)){
+//                            $scope.plas = value.RACE.OUT;
+//                        //}
+//                    });
+//                });
+              $scope.oldPoolTot = $scope.poolTot;
+            
+              httpq.get(tipServiceUrl + "PoolTot/" + number).then(function(data){
+                    $scope.poolTot = data;
+              });
             
             $http.get(tipServiceUrl + "Speed/" + $scope.Number).success(function(data){
                 race.speedMap = speedMapUrl + data.ImagePath;
