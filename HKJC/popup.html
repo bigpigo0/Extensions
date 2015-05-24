@@ -63,7 +63,7 @@
                     </tr>
                     <tr ng-repeat="runner in race.RUNNER" title="{{ '現時評分: ' + runner.RATING }}" ng-hide="runner.NUM === '(Null)'">
                         <td>{{ runner.NUM === "(Null)" ? "後備" : runner.NUM }}</td>
-                        <td><a id="{{ runner.HORSE_NUM }}" ng-href="{{ 'http://racing.hkjc.com/racing/info/horse/smartform/chinese/' + runner.HORSE_NUM  }}">{{ runner.HORSE_NAME_C }}</a><br><small>{{ runner.JOCKEY_NAME_C }}</small><small>({{ runner.JOCKEY_PLA_STAT }}%)</small></td>
+                        <td><a id="{{ runner.HORSE_NUM }}" ng-href="{{ 'http://racing.hkjc.com/racing/info/horse/smartform/chinese/' + runner.HORSE_NUM  }}">{{ runner.HORSE_NAME_C }}</a><br><small>{{ runner.JOCKEY_NAME_C }}</small><small>({{ runner.JOCKEY_PLA_STAT }}%)</small><br><small>{{runner.BEST_TIME}}</small></td>
                         <td>{{ runner.BAR_DRAW }}<br><small>({{ getBarWinChance(runner.BAR_DRAW) }}%)</small><br><small>({{ getBarPlaChance(runner.BAR_DRAW) }}%)</small></td>
                         <td><small>{{ runner.HANDICAP_WGT }}</small></td>
 <!--                        <td>{{ runner.JOCKEY_NAME_C }}</td>-->
