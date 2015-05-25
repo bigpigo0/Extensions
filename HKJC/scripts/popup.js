@@ -11,7 +11,7 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
 var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
 
 (function () {
-    var app = angular.module('race', []);
+    var app = angular.module('race', ['ngCookies']);
     
     app.factory('httpq', function($http, $q) {
       return {
@@ -61,7 +61,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         };
     });
     
-    app.controller('RaceController', ["$http", "$scope", "$interval", "$sce", "httpq", "tipService", function($http, $scope, $interval, $sce, httpq, tipService){
+    app.controller('RaceController', ["$http", "$scope", "$interval", "$cookieStore", "$sce", "httpq", "tipService", function($http, $scope, $interval, $cookieStore, $sce, httpq, tipService){
         var race = this;
         race.odds = [];
         race.result = {};
@@ -84,6 +84,9 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         var result = "";
         
         $scope.numOfRace = 0;
+        
+        
+
                 
         Array.prototype.max = function() {
             return Math.max.apply(null, this);
@@ -233,6 +236,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         
         $scope.setRaceNumber = function(number){
             $scope.Number = number;
+            $cookieStore.put('number', $scope.Number);
             tipService.getRace($scope.Number).then(function(data){
                 var root = data.data;
                 var today = new Date();
@@ -242,13 +246,30 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                         $scope.race["track"] = value.MEETING_TRACK;
                     }
                 });
-                scope.$apply();
+                $scope.$apply();
             });
             $scope.updateOdds(number);
+            $scope.getSpeed(number);
+        }
+        
+        $scope.getSpeed = function(number){
+                $http.get(tipServiceUrl + "Speed/" + number).success(function(data){
+                race.speedMap = speedMapUrl + data.ImagePath;
+                $scope.speedIndex =  data.SpeedIndex;
+                $scope.fitnessRating = data.FitnessRating;
+                $scope.newPaperTips = data.NewsPaperTip;
+                $scope.jockyTip = data.JockyTip;
+                var values = [];
+                for (var key in $scope.speedIndex){
+                    values.push($scope.speedIndex[key]);
+                }
+                $scope.maxSpeedIndex = Math.max.apply(null, values);
+            });
         }
         
         $scope.updateOdds = function(number) {
             $scope.Number = number;
+
                 //$scope.race = root.STARTERS[1].RACE;
 //                httpq.get(tipServiceUrl + "Win/" + number).then(function(data){
 //                    var root = data;
@@ -277,30 +298,17 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                     $scope.poolTot = data;
               });
             
-            $http.get(tipServiceUrl + "Speed/" + $scope.Number).success(function(data){
-                race.speedMap = speedMapUrl + data.ImagePath;
-                $scope.speedIndex =  data.SpeedIndex;
-                $scope.fitnessRating = data.FitnessRating;
-                $scope.newPaperTips = data.NewsPaperTip;
-                $scope.jockyTip = data.JockyTip;
-                var values = [];
-                for (var key in $scope.speedIndex){
-                    values.push($scope.speedIndex[key]);
-                }
-                $scope.maxSpeedIndex = Math.max.apply(null, values);
-            });
+
             
             $http.get(tipServiceUrl + "Result/" + $scope.Number).success(function(data){
                 race.result = data;
             });
             
-//            $http.get(tipServiceUrl + "JockyFairValue").success(function(data){
-//                $scope.fairValue = data;
-//            });
-            
-            //$http.get(jkresultUrl).success(function(data){
-            //    $scope.jkResult = $sce.trustAsHtml($(data).find(".bigborder").last().parent().html());
-            //});
+        }
+        
+        $scope.Number = $cookieStore.get('number');
+        if($scope.Number == undefined){
+            $scope.setRaceNumber(1);
         }
          
         tipService.getBarDrawChance().then(function(data){
