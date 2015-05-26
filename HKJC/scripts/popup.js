@@ -77,17 +77,14 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         $scope.speedMap = "";
         race.track = "";
         race.jkResult = "";
-        $scope.poolTot = {};
     
         var dom = "";
         var onccdom = "";
         var result = "";
         
         $scope.numOfRace = 0;
+        $scope.updateOldOdd = true;
         
-        
-
-                
         Array.prototype.max = function() {
             return Math.max.apply(null, this);
         };
@@ -236,7 +233,6 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         
         $scope.setRaceNumber = function(number){
             $scope.Number = number;
-            $cookieStore.put('number', $scope.Number);
             tipService.getRace($scope.Number).then(function(data){
                 var root = data.data;
                 var today = new Date();
@@ -267,36 +263,22 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             });
         }
         
+        $scope.$watch('Number', function() {
+            $scope.updateOldOdd = true;
+        });
+        
         $scope.updateOdds = function(number) {
             $scope.Number = number;
 
-                //$scope.race = root.STARTERS[1].RACE;
-//                httpq.get(tipServiceUrl + "Win/" + number).then(function(data){
-//                    var root = data;
-//                    if(root != undefined){
-//                        $scope.updateDate = root.WIN.updateDate;
-//                        $scope.updateTime = root.WIN.updateTime;
-//                        $.each(root, function(key, value){
-//                            //if(value.DATE === formatDate(today)){
-//                                $scope.wins = value.RACE.OUT;
-//                            //}
-//                        });
-//                    }
-//                });
-//                
-//                httpq.get(tipServiceUrl + "Place/" + number).then(function(data){
-//                    var root = data;
-//                    $.each(root, function(key, value){
-//                        //if(value.DATE === formatDate(today)){
-//                            $scope.plas = value.RACE.OUT;
-//                        //}
-//                    });
-//                });
-              $scope.oldPoolTot = $scope.poolTot;
-            
-              httpq.get(tipServiceUrl + "PoolTot/" + number).then(function(data){
-                    $scope.poolTot = data;
-              });
+            $scope.oldPoolTot = $scope.poolTot;
+
+            httpq.get(tipServiceUrl + "PoolTot/" + number).then(function(data){
+                $scope.poolTot = data;
+                if($scope.updateOldOdd){
+                    $scope.oldPoolTot = $scope.poolTot;
+                    $scope.updateOldOdd = false;
+                }
+            });
             
 
             
@@ -304,11 +286,6 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                 race.result = data;
             });
             
-        }
-        
-        $scope.Number = $cookieStore.get('number');
-        if($scope.Number == undefined){
-            $scope.setRaceNumber(1);
         }
          
         tipService.getBarDrawChance().then(function(data){
