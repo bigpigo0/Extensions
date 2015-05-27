@@ -131,7 +131,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         }
         
         $scope.getPlaFairValue = function(number, bar){
-            if($scope.race.RUNNER[number] != undefined){
+            if($scope.race.RUNNER[number] != undefined && bar != '(Null)'){
                 var jp = ($scope.race.RUNNER[number].JOCKEY_PLA_STAT) / 100
                 var bp = $scope.barDrawWinChance[$scope.Number + "_" + bar].Item2 / 100
                 var value = 1/(jp + bp - jp * bp );
@@ -178,7 +178,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         }
         
         $scope.getWinFairValue = function(number, bar){
-            if($scope.race.RUNNER[number] != undefined){
+            if($scope.race.RUNNER[number] != undefined && bar != '(Null)'){
                 var jp = $scope.race.RUNNER[number].JOCKEY_WIN_STAT / 100;
                 //var hp = parseInt($scope.race.RUNNER[number].WIN_LAST5) / 20;
                 var bp = $scope.barDrawWinChance[$scope.Number + "_" + bar].Item1 / 100
@@ -269,8 +269,6 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         
         $scope.updateOdds = function(number) {
             $scope.Number = number;
-
-            $scope.oldPoolTot = $scope.poolTot;
 
             httpq.get(tipServiceUrl + "PoolTot/" + number).then(function(data){
                 $scope.poolTot = data;
