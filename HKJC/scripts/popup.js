@@ -11,7 +11,7 @@ var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
 var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
 
 (function () {
-    var app = angular.module('race', ['ngCookies']);
+    var app = angular.module('race', []);
     
     app.factory('httpq', function($http, $q) {
       return {
@@ -61,7 +61,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         };
     });
     
-    app.controller('RaceController', ["$http", "$scope", "$interval", "$cookieStore", "$sce", "httpq", "tipService", function($http, $scope, $interval, $cookieStore, $sce, httpq, tipService){
+    app.controller('RaceController', ["$http", "$scope", "$interval", "$sce", "httpq", "tipService", function($http, $scope, $interval, $sce, httpq, tipService){
         var race = this;
         race.odds = [];
         race.result = {};
@@ -129,6 +129,13 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         race.getOnccTip = function(horseName){
             return $scope.jockyTip[horseName];
         }
+        
+        race.getCtcBossTip = function(horseName){
+            if ($scope.ctcBossTip.indexOf(horseName) > -1) {
+                return "老";
+            }
+            return "";
+        };
         
         $scope.getPlaFairValue = function(number, bar){
             if($scope.race.RUNNER[number] != undefined && bar != '(Null)'){
@@ -255,6 +262,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                 $scope.fitnessRating = data.FitnessRating;
                 $scope.newPaperTips = data.NewsPaperTip;
                 $scope.jockyTip = data.JockyTip;
+                $scope.ctcBossTip = data.CtcBossTip; 
                 var values = [];
                 for (var key in $scope.speedIndex){
                     values.push($scope.speedIndex[key]);
