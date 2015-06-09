@@ -9,6 +9,7 @@ var onccTipUrl = "http://racing.on.cc/racing/fav/current/rjfavf0301x0.html";
 var jkresultUrl = "http://www.hkjc.com/chinese/racing/jkcresult.asp";
 
 var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
+//var tipServiceUrl = "http://192.168.1.124:9002/wcf/";
 
 (function () {
     var app = angular.module('race', []);
@@ -246,6 +247,8 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                 $.each(root, function(key, value){
                     if(value.DATE != undefined){
                         $scope.race = value.RACE;
+                        $scope.raceVenue = value.VENUE;
+                        $scope.raceDate = value.DATE;
                         $scope.race["track"] = value.MEETING_TRACK;
                     }
                 });
@@ -278,7 +281,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         $scope.updateOdds = function(number) {
             $scope.Number = number;
 
-            httpq.get(tipServiceUrl + "PoolTot/" + number).then(function(data){
+            httpq.get(tipServiceUrl + "PoolTot/" + number + "/" + $scope.raceDate + "/" + $scope.raceVenue).then(function(data){
                 $scope.poolTot = data;
                 if($scope.updateOldOdd){
                     $scope.oldPoolTot = $scope.poolTot;
