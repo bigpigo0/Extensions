@@ -128,10 +128,13 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         }
         
         race.getOnccTip = function(horseName){
-            return $scope.jockyTip[horseName];
+            return $scope.jockyTip != null ? $scope.jockyTip[horseName] : "";
         }
         
         race.getCtcBossTip = function(horseName){
+            if($scope.ctcBossTip == null){
+                return "";
+            }
             if ($scope.ctcBossTip.indexOf(horseName) > -1) {
                 return "老";
             }
@@ -139,7 +142,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         };
         
         $scope.getPlaFairValue = function(number, bar){
-            if($scope.race.RUNNER[number] != undefined && bar != '(Null)'){
+            if($scope.race.RUNNER[number] != undefined && $scope.barDrawWinChance != undefined && bar != '(Null)'){
                 var jp = ($scope.race.RUNNER[number].JOCKEY_PLA_STAT) / 100
                 var bp = $scope.barDrawWinChance[$scope.Number + "_" + bar].Item2 / 100
                 var value = 1/(jp + bp - jp * bp );
@@ -186,7 +189,7 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         }
         
         $scope.getWinFairValue = function(number, bar){
-            if($scope.race.RUNNER[number] != undefined && bar != '(Null)'){
+            if($scope.race.RUNNER[number] != undefined && $scope.barDrawWinChance != undefined && bar != '(Null)'){
                 var jp = $scope.race.RUNNER[number].JOCKEY_WIN_STAT / 100;
                 //var hp = parseInt($scope.race.RUNNER[number].WIN_LAST5) / 20;
                 var bp = $scope.barDrawWinChance[$scope.Number + "_" + bar].Item1 / 100
@@ -207,13 +210,13 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             if(bar === "(Null)"){
                 return NaN;
             }
-            return $scope.barDrawWinChance[$scope.Number + "_" + bar].Item1;
+            return $scope.barDrawWinChance != undefined ? $scope.barDrawWinChance[$scope.Number + "_" + bar].Item1 :NaN;
         }
         $scope.getBarPlaChance = function(bar){
             if(bar === "(Null)"){
                 return NaN;
             }
-            return $scope.barDrawWinChance[$scope.Number + "_" + bar].Item2;
+            return $scope.barDrawWinChance != undefined ? $scope.barDrawWinChance[$scope.Number + "_" + bar].Item2 : NaN;
         }
         
         $scope.getJockyWin = function(number){

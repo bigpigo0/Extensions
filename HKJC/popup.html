@@ -72,7 +72,7 @@
                         <td ng-style="getOddDropStyle(poolTot[runner.NUM].Item1.Item2)">{{ poolTot[runner.NUM].Item1.Item2 }}%<br>${{ poolTot[runner.NUM].Item1.Item5 }}</td>
                         <td ng-style="getOddStyle(poolTot[runner.NUM].Item2.Item3)"><sup>{{ oldPoolTot[runner.NUM].Item2.Item1 }}</sup> {{ poolTot[runner.NUM].Item2.Item1 }}<br><small>({{getPlaFairValue(runner.NUM - 1, runner.BAR_DRAW)}})</small> <span class="{{ getArrowIcon(poolTot[runner.NUM].Item2.Item1, getPlaFairValue(runner.NUM - 1, runner.BAR_DRAW))}}" style="{{ getArrowColor(poolTot[runner.NUM].Item2.Item1, getPlaFairValue(runner.NUM - 1, runner.BAR_DRAW))}}"></span><br>${{ poolTot[runner.NUM].Item2.Item4}}</td>
                         <td ng-style="getOddDropStyle(poolTot[runner.NUM].Item2.Item2)">{{ poolTot[runner.NUM].Item2.Item2 }}%<br>${{ poolTot[runner.NUM].Item2.Item5 }}</td>
-                        <td ng-style="isMax(speedIndex[runner.HORSE_NAME_C])">{{ speedIndex[runner.HORSE_NAME_C] }} ({{ speedIndex[runner.HORSE_NAME_C] - maxSpeedIndex}})</td>
+                        <td ng-style="isMax(speedIndex[runner.HORSE_NAME_C])">{{ speedIndex[runner.HORSE_NAME_C] }} ({{ speedIndex[runner.HORSE_NAME_C] - maxSpeedIndex | number : 1}})</td>
                         <td><span class="{{ getFitnessIcon(fitnessRating[runner.HORSE_NAME_C]) }}" style="{{ getFitnessIconColor(fitnessRating[runner.HORSE_NAME_C]) }}"></span></td>
                         <td><small>{{ raceCtrl.getCtcBossTip(runner.HORSE_NAME_C)}} {{ raceCtrl.getTips(runner.HORSE_NAME_C) }}</small><br><small>{{ raceCtrl.getOnccTip(runner.HORSE_NAME_C) }}</small></td>
 <!--                        <td></td>-->
