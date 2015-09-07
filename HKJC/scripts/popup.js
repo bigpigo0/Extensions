@@ -263,7 +263,8 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
         
         $scope.getSpeed = function(number){
                 $http.get(tipServiceUrl + "Speed/" + number).success(function(data){
-                race.speedMap = speedMapUrl + data.ImagePath;
+                //race.speedMap = speedMapUrl + data.ImagePath;
+                race.speedMap = data.ImagePath;
                 $scope.speedIndex =  data.SpeedIndex;
                 $scope.fitnessRating = data.FitnessRating;
                 $scope.newPaperTips = data.NewsPaperTip;
