@@ -41,7 +41,7 @@
                 <div class="panel-heading">
                     <h2><span class="label label-default">{{ race.RACE_NAME_C }}</span> <span class="label label-primary">{{ race.CLASSES_C + " " + (race.track === "TURF" ? "草地" : "泥地")}}</span> <span class="label label-info">{{ race.DISTANCE + "米"}}</span> <span class="label label-warning">{{ race.POST_DATE }}</span> <span class="label label-success">{{ race.POST_TIME | toTime}}</span></h2>
                 </div>
-                <img ng-src="{{raceCtrl.speedMap}}" />
+                <img ng-src="{{raceCtrl.speedMap}}" width="1200"/>
                 <div ng-bind-html="jkResult"></div>
                 <table class="table">
                     <tr>

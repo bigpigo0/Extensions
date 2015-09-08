@@ -175,6 +175,8 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
                 return "glyphicon glyphicon-minus";
             }else if(rating == 1){
                 return "glyphicon glyphicon-arrow-down"; 
+            }else if(rating < 0){
+                return "glyphicon glyphicon-thumbs-down"; 
             }
         }
         
@@ -182,8 +184,10 @@ var tipServiceUrl = "http://drewdrew.cloudapp.net:9002/wcf/";
             if(rating == 3){
                 return "color: green; font-size: 10pt";    
             }else if(rating == 2){
-                return "color: black; font-size: 10pt";
+                return "color: green; font-size: 10pt";
             }else if(rating == 1){
+                return "color: red; font-size: 10pt";
+            }else if(rating < 0){
                 return "color: red; font-size: 10pt";
             }
         }
